@@ -20,7 +20,7 @@ var lCheck = require('../../lib/license-check');
 // var messaging = require('oecloud/lib/common/ev-global-messaging');
 module.exports = function (app, next) {
   lCheck.checkLicense();
-  app.get('/checklicense', function(req, res){
+  app.get('/checklicense', function (req, res) {
     var licensePublicKey = jwtUtil.sanitizePublicKey(process.env.LICENSE_PUBLICKEY);
     var licenseKey = process.env.LICENSE_KEY;
     if (licensePublicKey && licenseKey) {
@@ -31,21 +31,18 @@ module.exports = function (app, next) {
         log.info({}, 'licence info decoded');
         res.json({ 'expired': (Date.now() > decoded.endl), 'expiryDate': new Date(decoded.endl) });
         return;
-      } else {
-        log.info({}, 'This is a licensed application. However licence is not configured.');
-        res.json({ 'expired': false, 'expiryDate': 'This is a licensed application. However licence is not configured!' });
-        return;
       }
-    } else {
       log.info({}, 'This is a licensed application. However licence is not configured.');
       res.json({ 'expired': false, 'expiryDate': 'This is a licensed application. However licence is not configured!' });
       return;
     }
+    log.info({}, 'This is a licensed application. However licence is not configured.');
+    res.json({ 'expired': false, 'expiryDate': 'This is a licensed application. However licence is not configured!' });
+    return;
   });
 
   next();
 };
-
 
 
 // module.exports ={
