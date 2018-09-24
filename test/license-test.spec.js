@@ -33,18 +33,21 @@ describe(chalk.blue('oe-license check license'), function () {
 
 
   it('License not configured', function (done) {
+    process.env.LICENSE_PUBLICKEY = "";
+    process.env.LICENSE_KEY = "";
+
     api
     .set('Accept', 'application/json')
     .get(url)
     .expect(200)
     .end(function(err, res){
-        expect(res).not.to.be.null;
-        expect(JSON.parse(res).expiryDate).to.be.equal("This is a licensed application. However licence is not configured!");
+        expect(res.body).not.to.be.null;
+        expect(res.body.expiryDate).to.be.equal("This is a licensed application. However licence is not configured!");
+        done();
     });
-    done();
   });
 
-  it('License check function - License not configured', function (done) {
+  it('fnLicenseCheck - License not configured', function (done) {
     lcheck.checkLicense(function(err, exp){
         expect(err).not.to.be.null;
         expect(exp).to.be.equal(0);
@@ -61,14 +64,15 @@ describe(chalk.blue('oe-license check license'), function () {
         .get(url)
         .expect(200)
         .end(function(err, res){
-            expect(res).not.to.be.null;
-            expect(JSON.parse(res).expired).to.be.equal(false);
+            expect(res.body).not.to.be.null;
+            expect(res.body.expired).to.be.equal(false);
+            done();
         });
 
 
   });
 
-  it('License check function - License configured and not expired', function (done) {
+  it('fnLicenseCheck - License configured and not expired', function (done) {
     lcheck.checkLicense(function(err, exp){
         expect(err).to.be.null;
         expect(exp).not.to.be.equal(0);
@@ -85,13 +89,14 @@ describe(chalk.blue('oe-license check license'), function () {
         .get(url)
         .expect(200)
         .end(function(err, res){
-            expect(res).not.to.be.null;
-            expect(JSON.parse(res).expired).to.be.equal(true);
+            expect(res.body).not.to.be.null;
+            expect(res.body.expired).to.be.equal(true);
+            done();
         });
-    done();
+
   });
 
-  it('License check function - License configured but expired', function (done) {
+  it('fnLicenseCheck - License configured but expired', function (done) {
     lcheck.checkLicense(function(err, exp){
         expect(err).to.be.null;
         expect(exp).to.be.equal(0);
