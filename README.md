@@ -1,16 +1,11 @@
-# oe-validation
+# oe-license
 
-This project implements validation functionality on Models.
+This project implements license check for licensed application based on oe-cloud.
 
 ## Pre-requisites
 
 * oe-cloud 
 * oe-logger
-* oe-expression
-* oe-personalization
-* oe-model-composite
-* oe-business-rule
-* oe-promise
 
 
 
