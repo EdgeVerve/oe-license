@@ -15,7 +15,7 @@ chai.use(require('chai-things'));
 var defaults = require('superagent-defaults');
 var supertest = require('supertest');
 var api = defaults(supertest(app));;
-var url = '/api';
+var url = '/checklicense';
 var defaultContext = {"ctx":{"tenantId":"default"}};
 var lcheck = require('../lib/license-check');
 
@@ -27,44 +27,26 @@ describe(chalk.blue('oe-license check license'), function () {
   this.timeout(20000);
     before('wait for boot', function(done){
         bootstrap.then(() => {
-        // debugger
-        //create user
-    api.post('/api/Users')
-    .set('Accept', 'application/json')
-      .send({
-        "username":"admin",
-        "email":"admin@ev.com",
-        "password":"admin"
-        })
-        .end(function(err,res){
-          if(err){
             done();
-          }
-          api.post('/api/Users/login')
-          .set('Accept', 'application/json')
-          .send({
-            "username":"admin",
-            "password":"admin"
-            })
-            .end(function(err,res){
-              testUsertoken = res.body.id;
-              done();
-            })
         })
-    //login
-        
-        })
-        .catch(done)
     });
 
 
   it('License not configured', function (done) {
+    api
+    .set('Accept', 'application/json')
+    .get(url)
+    .expect(200)
+    .end(function(err, res){
+        expect(res).not.to.be.null;
+        expect(JSON.parse(res).expiryDate).to.be.equal("This is a licensed application. However licence is not configured!");
+    });
     done();
   });
 
   it('License check function - License not configured', function (done) {
     lcheck.checkLicense(function(err, exp){
-        expect(err).to.be.null;
+        expect(err).not.to.be.null;
         expect(exp).to.be.equal(0);
         done();
     });
@@ -74,12 +56,21 @@ describe(chalk.blue('oe-license check license'), function () {
   it('License configured and not expired', function (done) {
     process.env.LICENSE_PUBLICKEY = "-----BEGIN PUBLIC KEY-----MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCSmI0b68T9jrlElm6jdrLT1lAWE6GAZVS+YJ68IBJXnRjzkTYLBG3joIxhsVDg6wrL6lojAqpznB5Gt0hRgF6+AcoRC6bJkS8ltAmAOC0Q+dz1wUaX5LOdoGOXLdHhkmhjGWYs8RWd1qC9k0NZ1b8/lBhKUsKbW8gzrH/czu9psQIDAQAB-----END PUBLIC KEY-----";
     process.env.LICENSE_KEY = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJvZWNsb3VkLmlvIiwiYXVkIjoib2VjbG91ZC5pbyIsImVuZGwiOjQwNzA4ODkwMDAwMDAsImlhdCI6MTUzNzcyNjM4MX0.jhBWHl0VzFulpQiRcud6T_t1R6Hqd6VXqA3_3SNovNm4Io5T_-VIZCMgwQrZRJJgPUZzufUdF1nCId2X7mU0MiWM4isKBXDScXIf5YqeWvDooPEo4ywI6g17WvmBy1dIaZuUatFDZSSi4GciCI3In5UvV8bKUX-9bCi9vha13c8";
-    done();
+    api
+        .set('Accept', 'application/json')
+        .get(url)
+        .expect(200)
+        .end(function(err, res){
+            expect(res).not.to.be.null;
+            expect(JSON.parse(res).expired).to.be.equal(false);
+        });
+
+
   });
 
   it('License check function - License configured and not expired', function (done) {
     lcheck.checkLicense(function(err, exp){
-        expect(err).not.to.be.null;
+        expect(err).to.be.null;
         expect(exp).not.to.be.equal(0);
         done();
     });
@@ -89,6 +80,14 @@ describe(chalk.blue('oe-license check license'), function () {
 
   it('License configured but expired', function (done) {
     process.env.LICENSE_KEY = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJvZWNsb3VkLmlvIiwiYXVkIjoib2VjbG91ZC5pbyIsImVuZGwiOjE1MTQ3NDUwMDAwMDAsImlhdCI6MTUzNzcyNjQ1OH0.XYEWbaBmpEXR0prxtUfcfjbXfBUpfQgjUJtwxWrqpOipHLs0wP5nh4zA-e6eADfOW6e8kUgKL6hb29opEyBJYq5x5-W6BlF0-L96dpbWPyAnwk6rOgqyum5dfmVfthc2xQNPQ8svs60z3OOVEjWRNf5_47yZtNRnfcyq9euYWIM";
+    api
+        .set('Accept', 'application/json')
+        .get(url)
+        .expect(200)
+        .end(function(err, res){
+            expect(res).not.to.be.null;
+            expect(JSON.parse(res).expired).to.be.equal(true);
+        });
     done();
   });
 
