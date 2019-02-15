@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "oe-logger": "git+http://evgit/oec-next/oe-logger.git#master",
-    "jsonwebtoken": "8.0.1",
+    "jsonwebtoken": "8.4.0",
     "oe-jwt-utils": "git+http://evgit/oec-next/oe-jwt-utils.git#master"
   },
   "devDependencies": {
