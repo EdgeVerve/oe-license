@@ -1,6 +1,6 @@
 {
   "name": "oe-license",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "oe-cloud modularization project - license module",
   "engines": {
     "node": ">=6"
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "jsonwebtoken": "8.4.0",
-    "oe-jwt-utils": "git+http://evgit/oecloud.io/oe-jwt-utils.git#master",
-    "oe-logger": "git+http://evgit/oecloud.io/oe-logger.git#master"
+    "oe-jwt-utils": "git+http://evgit/oecloud.io/oe-jwt-utils.git#2.2.0",
+    "oe-logger": "git+http://evgit/oecloud.io/oe-logger.git#2.2.0"
   },
   "devDependencies": {
     "babel-eslint": "7.2.3",
@@ -30,8 +30,8 @@
     "grunt-mocha-istanbul": "5.0.2",
     "istanbul": "0.4.5",
     "mocha": "5.2.0",
-    "oe-cloud": "git+http://evgit/oecloud.io/oe-cloud.git#master",
-    "oe-connector-mongodb": "git+http://evgit/oecloud.io/oe-connector-mongodb.git#master",
+    "oe-cloud": "git+http://evgit/oecloud.io/oe-cloud.git#2.2.0",
+    "oe-connector-mongodb": "git+http://evgit/oecloud.io/oe-connector-mongodb.git#2.2.0",
     "superagent-defaults": "0.1.14",
     "supertest": "3.4.2"
   },
